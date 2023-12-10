@@ -1,61 +1,99 @@
-#include <Keypad.h>
-#include <Servo.h>
+#include <Adafruit_Sensor.h>
+#include <DHT.h>
+#include <DHT_U.h>
 
-const int servoPin = 11;  // Pin to which the servo is connected
-Servo myServo;
+#define RXp2 16
+#define TXp2 17
+#define PIRPin 4
+#define LightSensorPin 27
+#define AnalogThreshold 500
+#define LED_House 25
+#define DHTPIN 26     // Digital pin connected to the DHT sensor 
+#define DHTTYPE    DHT11     // DHT 11
+#define relayPin 5
 
-const int ROW_NUM    = 4; // four rows
-const int COLUMN_NUM = 4; // four columns
+bool isCorrectPasswordEntered = false;
+bool isOwner = false;
 
-char keys[ROW_NUM][COLUMN_NUM] = {
-  {'1','2','3','A'},
-  {'4','5','6','B'},
-  {'7','8','9','C'},
-  {'*','0','#','D'}
-};
-
-byte pin_rows[ROW_NUM] = {9, 8, 7, 6};    // connect to the row pinouts of the keypad
-byte pin_column[COLUMN_NUM] = {5, 4, 3, 2};   // connect to the column pinouts of the keypad
-
-Keypad keypad = Keypad(makeKeymap(keys), pin_rows, pin_column, ROW_NUM, COLUMN_NUM);
-String enteredPassword = "";
-String correctPassword = "1234";  // Change this to your desired password
+DHT_Unified dht(DHTPIN, DHTTYPE);
 
 void setup() {
-  Serial.begin(9600);
-  myServo.attach(servoPin);
-  resetServo();
+  Serial.begin(115200);
+  Serial2.begin(9600, SERIAL_8N1, RXp2, TXp2);
+  pinMode(PIRPin, INPUT_PULLUP);
+  pinMode(LED_House, OUTPUT);
+  pinMode(relayPin, OUTPUT);
+  // Initialize device.
+  dht.begin();
+  digitalWrite(relayPin, HIGH);
 }
 
 void loop() {
-  char key = keypad.getKey();
+  Serial.println("Message Received:");
+  String receivedMessage = Serial2.readString();  // Read the string "1" / "0" according to the given password
+
+  // Trim any leading or trailing whitespace from the received message
+  receivedMessage.trim();
+
+  Serial.println(receivedMessage);
+
+  if (!isCorrectPasswordEntered) {
+    // Check if the correct password is entered
+    if (receivedMessage.equals("1")) {
+      Serial.println("Correct Password Entered");
+      isCorrectPasswordEntered = true;
+      isOwner = true;  // Assume the user is the owner
+    }
+
+  } else {
+    // Once the correct password is entered, and user is identified as the owner
+    if (isOwner) {
+      Serial.println("Owner of the house");
+
+      if (digitalRead(PIRPin) == HIGH) {
+        Serial.println("Motion Detected!!");
+
+          // Perform actions related to motion detection for the owner
+          // For example, open the door using the servo
+          if (analogRead(LightSensorPin) > AnalogThreshold) {
+
+            digitalWrite(LED_House, HIGH);
+            while(true){
+                // Get temperature event and print its value.
+                sensors_event_t event;
+                dht.temperature().getEvent(&event);
+                if (isnan(event.temperature)) {
+                  Serial.println(F("Error reading temperature!"));
+                }
+                  if(event.temperature > 27.0){
+                    // we are making the opposite due to some problem in the relay module understanding!!
+                    digitalWrite(relayPin, LOW);
+                  }else{
+                    digitalWrite(relayPin, HIGH);
+                  }
+            }
+          }else{
+                while(true){
+                  // Get temperature event and print its value.
+                  sensors_event_t event;
+                  dht.temperature().getEvent(&event);
+                  if (isnan(event.temperature)) {
+                    Serial.println(F("Error reading temperature!"));
+                  }
+                  
+                  if(event.temperature > 27.0){
+                    // we are making the opposite due to some problem in the relay module understanding!!
+                    digitalWrite(relayPin, LOW);
+                  }else{
+                    digitalWrite(relayPin, HIGH);
+                  }
+            }
+          }
+
   
-  if (key) {
-    if (key == '#') {
-      if (enteredPassword == correctPassword) {
-        unlockDoor();
-      } else {
-        Serial.println("Incorrect Password. Try Again.");
-        resetPassword();
       }
     } else {
-      enteredPassword += key;
+      Serial.println("Incorrect Password. Try Again.");
     }
   }
-}
-
-void unlockDoor() {
-  Serial.println("Password Correct. Unlocking Door!");
-  myServo.write(90);  // Rotate the servo to unlock position
-  delay(5000);        // Keep the door unlocked for 2 seconds
-  resetPassword();
-  resetServo();
-}
-
-void resetPassword() {
-  enteredPassword = "";
-}
-
-void resetServo() {
-  myServo.write(0);  // Rotate the servo to the locked position
 }
