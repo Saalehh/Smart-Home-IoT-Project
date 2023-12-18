@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+{% block title %} Rgesterater Account {% endblock %}
+
+{% block additional_style %}
+<style>
+  .txt{
+    color: aliceblue;
+  }
+</style>
+{% endblock %}
+
+{% block body %}
+
+<h2 class="text-center txt" style="padding-top: 30px; margin-bottom: 20px">
+  Register Account
+</h2>
+<div class="container">
+  <form class="row g-3" action="/sign-up" method="post" enctype="multipart/form-data">
+    <div class="input-group" style="margin-bottom: 20px">
+      <strong><label for="validationDefaultUsername" class="form-label txt">Username</label></strong>
+      <div class="col-md-6">
+        <input
+          type="text"
+          class="form-control"
+          id="validationDefaultUsername"
+          name="username"
+          aria-describedby="inputGroupPrepend2"
+          required
+        />
+      </div>
+    </div>
+    <div class="col-md-6">
+      <strong><label for="password1" class="txt">Password</label></strong>
+      <input
+        type="password"
+        class="form-control"
+        name="password1"
+        id="password1"
+        placeholder="password"
+        required
+      />
+    </div>
+    <div class="col-md-6">
+      <strong><label for="password2" class="txt">Password (Confirm)</label></strong>
+      <input
+        type="password"
+        class="form-control"
+        name="password2"
+        id="password2"
+        placeholder="Confirm password"
+        required
+      />
+    </div>
+    <div class="col-12 text-center">
+      <button
+        style="margin-top: 20px;"
+        type="submit"
+        class="btn btn btn-info btn-lg txt"
+        name="submit"
+      >
+        Sign Up
+      </button>
+    </div>
+  </form>
+</div>
+{% endblock %}

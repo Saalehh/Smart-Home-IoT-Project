@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        {% include 'bootstrap_css.html' %}
+        <script src="{{ url_for('static', filename='js/alert.js') }}"></script>
+
+        <style>
+            :root {
+                --background-light: #f0f0f0; /* Light mode background color */
+                --background-dark: #1a1a1a; /* Dark mode background color */
+                --background-image: url("/static/images/background.jpg"); /* Set the URL or path to your background image */
+            }
+
+            body {
+                background-color: var(--background-light);
+                background-image: var(--background-image);
+                background-attachment: fixed;
+                background-size: cover;
+                margin-top: var(--margin-top);
+            }
+        </style>
+
+        <title>{% block title %} Smarter {% endblock %}</title>
+        <link rel="icon" href="{{ url_for('static', filename='icons/favicon.png') }}" type="image/png" />
+        {% block additional_style %} {% endblock %}
+    </head>
+    <body>
+        <br /><br /><br /><br />
+        {% include 'navbar.html' %} {% include 'listen_flashes.html' %} {% block body %}
+
+        <h1>Body For Each Template</h1>
+
+        {% endblock %} {% include 'bootstrap_js.html' %}
+    </body>
+</html>
+

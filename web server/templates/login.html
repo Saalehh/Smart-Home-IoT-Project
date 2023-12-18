@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% block title %} Login {% endblock %}
+{% block additional_style %}
+<style>
+  .txt{
+    color: aliceblue;
+  }
+</style>
+{% endblock %}
+
+
+{% block body %}
+
+<h2 class="text-center txt" style="padding-top: 30px;margin-bottom: 20px;">Login</h2>
+    <div class="container">
+      <form class="row g-3" action="/login" method="post">
+
+        <div class="col-md-6">
+            <strong><label for="validationDefaultUsername" class="form-label txt">Username</label></strong>
+            <div class="input-group mb-3">
+              <span class="input-group-text" id="inputGroupPrepend2">@</span>
+              <input type="text" class="form-control" id="validationDefaultUsername" name="username" aria-describedby="inputGroupPrepend2" required>
+            </div>  
+        </div>
+        <br>
+        <div class="col-md-6">
+           <strong><label for="validationDefaultPassword" class="form-label txt" >Password</label></strong>
+            <div class="input-group mb-3">
+                <input type="password" class="form-control" name="password"  required/>
+            </div>  
+        </div>
+        <div class="col-12 text-center">
+            <strong><button style="margin-top: 20px;" type="submit" class="btn btn btn-info  btn-lg" name="login">Log In</button></strong>
+        </div>
+      </form>
+    </div>
+
+{% endblock %}

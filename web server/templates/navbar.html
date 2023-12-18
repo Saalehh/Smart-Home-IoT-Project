@@ -1,0 +1,19 @@
+<nav class="navbar navbar-expand-md navbar-dark bg-dark shadow-sm fixed-top" aria-label="Fourth navbar example">
+    <div class="container-fluid">
+      {% if user %}
+      <a href="/" type="button" class="btn btn-dark "  >Home</a>
+      <a href="/warnings" type="button" class="btn btn-dark ">Warnings</a>
+      <a href="/warnings" >
+        {% if warn == 1 %}
+        <img src="{{ url_for('static', filename='/icons/warning_red.png') }}" alt="mdo" width="30" height="30" class="rounded-circle">
+        {% else %}
+        <img src="{{ url_for('static', filename='/icons/warning_yellow.png') }}" alt="mdo" width="30" height="30" class="rounded-circle">
+        {% endif %}
+      </a>
+      <strong style="padding-left: 10px; color: aliceblue;">{{user['username']}}</strong>
+      {% else %}
+      <a href="/sign-up" type="button" class="btn btn-info " style="float: right;">Sign Up</a>
+      <a href="/login" type="button" class="btn btn-dark "  style="float: right;margin-left: 30px;">Login</a>
+      {% endif %}
+    </div>
+  </nav>

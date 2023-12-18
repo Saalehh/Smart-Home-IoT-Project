@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+
+
+{% block body %}
+
+<br>
+{% if warnings %}
+{% for warning in warnings %}
+<div>
+   <button type="button" class="col-12 text-center btn btn btn-info  btn-lg">   
+      <div style="text-align: left;">
+         <p>Date: {{warning["date"]}}</p>
+      </div>
+      <div>
+         {% if warning["status"] == 0 %}
+         <img src="{{ url_for('static', filename='/icons/warning_red.png') }}" alt="mdo" width="30" height="30" class="rounded-circle"> {{warning["description"]}}
+         {% else %}
+         <img src="{{ url_for('static', filename='/icons/warning_yellow.png') }}" alt="mdo" width="30" height="30" class="rounded-circle"> {{warning["description"]}}
+         {% endif %}
+      </div>
+   </button>
+</div>
+<br>
+{% endfor %}
+{% endif %}
+
+{% endblock %}

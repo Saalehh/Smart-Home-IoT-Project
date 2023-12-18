@@ -1,0 +1,106 @@
+{% extends 'base.html' %}
+
+{% block body %}
+<main class="container" style="background-color: white; color: black;">
+    <div class="my-3 p-3 bg-body rounded shadow-sm">
+        <h5 class="border-bottom pb-2 mb-0">{{user["username"]}}'s Smart Home</h5>
+        <div class="d-flex text-body-secondary pt-3">
+            <img src="{{ url_for('static', filename='/icons/fan.png') }}" alt="mdo" width="30" height="30"
+                class="rounded-circle">
+            <div class="pb-3 mb-0 small lh-sm border-bottom w-100">
+                <div class="d-flex justify-content-between">
+                    <strong class="text-gray-dark">Fan</strong>
+                    <button onclick="turnFanOn()" class="btn btn-outline-primary"
+                        style="color: black;">ON</button>
+                    <button onclick="turnFanOff()" class="btn btn-outline-secondary"
+                        style="color: black;">OFF</button>
+                </div>
+                <span class="d-block">{{status["fan"]}}</span>
+            </div>
+        </div>
+        <div class="d-flex text-body-secondary pt-3">
+            <img src="{{ url_for('static', filename='/icons/light.png') }}" alt="mdo" width="30" height="30"
+                class="rounded-circle">
+            <div class="pb-3 mb-0 small lh-sm border-bottom w-100">
+                <div class="d-flex justify-content-between">
+                    <strong class="text-gray-dark">Lights</strong>
+                    <button onclick="turnLightOn()" class="btn btn-outline-primary"
+                        style="color: black;">ON</button>
+                    <button onclick="turnLightOff()" class="btn btn-outline-secondary"
+                        style="color: black;">OFF</button>
+                </div>
+                <span class="d-block">{{status["lights"]}}</span>
+            </div>
+        </div>
+        <div class="d-flex text-body-secondary pt-3">
+            <img src="{{ url_for('static', filename='/icons/temperature.png') }}" alt="mdo" width="30" height="30"
+                class="rounded-circle">
+            <div class="pb-3 mb-0 small lh-sm border-bottom w-100">
+                <div class="d-flex justify-content-between">
+                    <strong class="text-gray-dark">Temperature</strong>
+                </div>
+                <span class="d-block">{{status["temperature"]}}</span>
+            </div>
+        </div>
+        <div class="d-flex text-body-secondary pt-3">
+            <img src="{{ url_for('static', filename='/icons/Humidity.png') }}" alt="mdo" width="30" height="30"
+                class="rounded-circle">
+            <div class="pb-3 mb-0 small lh-sm border-bottom w-100">
+                <div class="d-flex justify-content-between">
+                    <strong class="text-gray-dark">Humidity</strong>
+                </div>
+                <span class="d-block">{{status["humidity"]}}</span>
+            </div>
+        </div>
+        {% if status["ownerStatus"] == "yes" %}
+        <div class="d-flex text-body-secondary pt-3">
+            <img src="{{ url_for('static', filename='/icons/owner.png') }}" alt="mdo" width="30" height="30"
+                class="rounded-circle">
+            <div class="pb-3 mb-0 small lh-sm border-bottom w-100">
+                <div class="d-flex justify-content-between">
+                    <strong class="text-gray-dark">Owner Exists</strong>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+        <small class="d-block text-center mt-3"> <!-- Change text-end to text-center here -->
+            <button onclick="autoControl()" class="btn btn btn-info  btn-lg text-center">Automatic Control</button>
+          <br> <br>
+          <button onclick="reset()" class="btn btn btn-info  btn-lg text-center">Reset</button>
+        </small>
+    </div>
+</main>
+    <script>
+
+        function turnFanOn() {
+            fetch('/turn-fan-on');
+            location.reload();
+        }
+
+        function turnFanOff() {
+            fetch('/turn-fan-off');
+            location.reload();
+        }
+
+        function turnLightOn() {
+            fetch('/turn-lights-on');
+            location.reload();
+        }
+
+        function turnLightOff() {
+            fetch('/turn-lights-off');
+            location.reload();
+        }
+
+        function autoControl() {
+            fetch('/auto-control');
+            location.reload();
+        }
+
+        function reset() {
+            fetch('/reset');
+            location.reload();
+        }
+    </script>
+
+{% endblock %}
