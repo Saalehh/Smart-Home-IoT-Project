@@ -29,7 +29,7 @@ const char *password = "*****";
 #define emailSubject "[ALERT] ESP Intrusion!"
 
 // Default Recipient Email Address
-String receiverEmail = "salehadel2001@gmail.com";
+String receiverEmail = "*****@gmail.com";
 String enableEmailChecked = "checked";
 
 // Flag variable to keep track if email notification was sent or not
