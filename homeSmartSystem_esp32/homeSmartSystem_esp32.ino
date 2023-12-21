@@ -9,15 +9,20 @@
 #define RXp2 16
 #define TXp2 17
 
-#define PIRPin 4
-#define relayPin 27
+#define PIRPin 4 // motion detection senor
+#define relayPin 27 // allows the voltage to pass to the fan
 #define LED_House 25
-#define DHTPIN 26
+#define DHTPIN 26 // tempreture and humedity sensor
 #define LightSensorPin 33
 
 #define LightThreshold 3000
+#define FanThreshold  25.0
 #define DHTTYPE DHT11
 
+
+DHT dht(DHTPIN, DHTTYPE);
+
+// Setting wifi cridentials
 const char *ssid = "*****";
 const char *password = "*****";
 
@@ -28,20 +33,16 @@ const char *password = "*****";
 #define smtpServerPort 465
 #define emailSubject "[ALERT] ESP Intrusion!"
 
+
 // Default Recipient Email Address
 String receiverEmail = "*****@gmail.com";
 String enableEmailChecked = "checked";
-
-// Flag variable to keep track if email notification was sent or not
-bool emailSent = false;
 
 const char *PARAM_INPUT_1 = "email_input";
 const char *PARAM_INPUT_2 = "enable_email_input";
 
 // The Email Sending data object contains config and data to send
 SMTPData smtpData;
-
-DHT dht(DHTPIN, DHTTYPE);
 
 AsyncWebServer server(80);
 
@@ -159,7 +160,7 @@ void checkTemperatureAndFan() {
   float temperature = dht.readTemperature();
   if (!isnan(temperature)) {
     if (controlFanManually == false) {
-      if (temperature > 25.0) {
+      if (temperature > FanThreshold) {
         turnFanOn();
       } else {
         turnFanOff();
@@ -234,15 +235,12 @@ void checkIntrusion() {
     }
 
     // Send the Email alert
-    if (!emailSent) {
       String emailMessage = String("Someone tried to enter your house with wrong password!!");
       if (sendEmailNotification(emailMessage)) {
         Serial.println(emailMessage);
-        emailSent = true;
       } else {
         Serial.println("Email failed to send");
-      }
-    }
+      }    
   }
 }
 
@@ -317,6 +315,7 @@ void reset(AsyncWebServerRequest *request) {
 void setup() {
   Serial.begin(115200);
   Serial2.begin(9600, SERIAL_8N1, RXp2, TXp2);
+  
   pinMode(PIRPin, INPUT_PULLUP);
   pinMode(LightSensorPin, INPUT);
   pinMode(LED_House, OUTPUT);

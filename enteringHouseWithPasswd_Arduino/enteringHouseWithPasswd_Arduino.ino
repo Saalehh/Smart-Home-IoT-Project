@@ -1,7 +1,7 @@
 #include <Keypad.h>
 #include <Servo.h>
 
-const int servoPin = 11;  // Pin to which the servo is connected
+const int servoPin = 11;  // Pin to which the servo (motor) is connected
 Servo myServo;  // Use the Servo class from the ESP32 Servo library
 
 const int ROW_NUM    = 4; // four rows
@@ -18,6 +18,7 @@ byte pin_rows[ROW_NUM] = {9, 8, 7, 6};    // connect to the row pinouts of the k
 byte pin_column[COLUMN_NUM] = {5, 4, 3, 2};   // connect to the column pinouts of the keypad
 
 Keypad keypad = Keypad(makeKeymap(keys), pin_rows, pin_column, ROW_NUM, COLUMN_NUM);
+
 String enteredPassword = "";
 String correctPassword = "1234";  // Change this to your desired password
 

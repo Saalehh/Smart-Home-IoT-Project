@@ -131,9 +131,10 @@ def add_warning():
 
     if warn_type == "intrusion":
         wrong_password_attempt_warning()
-
-    warn_response = {"status": "success"}
-
+        warn_response = {"status": "success"}
+    else:
+        warn_response = {"status": "error"}
+ 
     return jsonify(warn_response)
 
 
